@@ -14,6 +14,8 @@ public enum Typography {
     case h1Bold
     /// Header 20 Bold -0.5
     case h2Bold
+    /// Header 15 Semibold -0.5
+    case h3Semibold
     /// Paragraph 15 Regular -0.5
     case p1Regular
     /// Paragraph 12 Regular 0.0
@@ -31,6 +33,10 @@ public enum Typography {
             
             case .h2Bold:
                 font = Font.get(size: 20, weight: .bold)
+                tracking = -0.5
+            
+            case .h3Semibold:
+                font = Font.get(size: 15, weight: .semibold)
                 tracking = -0.5
             
             case .p1Regular:
