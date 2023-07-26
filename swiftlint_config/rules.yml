@@ -1,0 +1,123 @@
+disabled_rules:
+  - superfluous_disable_command
+  - trailing_whitespace # Lines should not have trailing whitespace.
+  - empty_count # Prefer checking isEmpty over comparing count to zero.
+  - nesting #Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.
+  - opening_brace #Opening braces should be preceded by a single space and on the same line as the declaration.
+  - force_unwrapping # Force unwrapping should be avoided.
+  - notification_center_detachment # An object should only remove itself as an observer in deinit.
+  - file_header # Header comments should be consistent with project patterns. The SWIFTLINT_CURRENT_FILENAME placeholder can optionally be used in the required and forbidden patterns. It will be replaced by the real file name.
+  - todo
+  - inclusive_language # Identifiers should use inclusive language that avoids discrimination against groups of people based on     race, gender, or socioeconomic status
+  - trailing_comma
+  - sorted_imports # Imports should be sorted.
+
+opt_in_rules:
+  - anyobject_protocol # Prefer inherit protocol from `AnyObject` over `class`
+  - closing_brace # Extra spaces when using braces
+  - collection_alignment #
+  - comma # Space between identifier and comma
+  - compiler_protocol_init # The initializers declared in compiler protocols such as ExpressibleByArrayLiteral shouldn’t be called directly.
+  - convenience_type # Types used for hosting only static members should be implemented as a caseless enum to avoid instantiation.
+  - discouraged_optional_boolean # Prefer non-optional booleans over optional booleans.
+  - dynamic_inline # Avoid using `dynamic` and `@inline(__always)` together.
+  - unneeded_break_in_switch # Avoid using unneeded break statements.
+  - unused_capture_list # Unused reference in a capture list should be removed.
+  - unused_optional_binding # Unused Optional Binding
+  - void_return # Returning Void in a function declaration is redundant.
+  - closure_end_indentation # Closure end should have the same indentation as the line that started it.
+  - closure_spacing # Closure expressions should have a single space inside each brace.
+  - operator_usage_whitespace # Operators should be surrounded by a single whitespace when they are being used.
+  - explicit_init # Explicitly calling .init() should be avoided.
+  - first_where # Prefer using .first(where:) over .filter { }.first in collections.
+  - for_where # `Where` clauses are preferred over a single `if` inside a `for`.
+  - multiline_parameters # Functions and methods parameters should be either on the same line, or one per line.
+  - redundant_nil_coalescing # nil coalescing operator is only evaluated if the lhs is nil, coalescing operator with nil as rhs is redundant
+  - single_test_class # Test files should contain a single QuickSpec or XCTestCase class.
+  - switch_case_on_newline # Cases inside a switch should always be on a newline
+  - unneeded_parentheses_in_closure_argument # Parentheses are not needed when declaring closure arguments.
+  - multiline_arguments # Functions and methods parameters should be either on the same line, or one per line.
+  - multiline_arguments_brackets # Multiline arguments should have their surrounding brackets in a new line.
+  - multiline_parameters_brackets # Multiline parameters should have their surrounding brackets in a new line.
+  - multiple_closures_with_trailing_closure # Trailing closure syntax should not be used when passing more than one closure argument.
+  #- multiline_function_chains # Chained function calls should be either on the same line, or one per line.
+  - multiline_literal_brackets # Multiline literals should have their surrounding brackets in a new line.
+
+
+custom_rules:
+  ob_empty_string:
+    name: "Неверная проверка строки на пустоту"
+    regex: "( == \"\")|(== \"\")|( ==\"\")|(==\"\")|( != \"\")|(!= \"\")|( !=\"\")|(!=\"\")"
+    message: "Используй 'string.isEmpty'"
+    severity: warning
+
+  vboolean_clear_condition:
+    name: "Слишком сложное условие"
+    regex: "^(?>(?!(as\\?)|(\\?.)).)*((!= true)|(!= false)).*$"
+    message: "Используй == true/false или перменную в качестве условия"
+    severity: error
+
+  ob_boolean_in_ternar_return:
+    name: "Возврат Bool из тернарного оператора"
+    regex: "\\? (true : false)|(false : true)"
+    message: "Тернарный оператор не используется для возврата Bool"
+    severity: error
+
+identifier_name:
+  min_length: 2
+  max_length: 50
+  excluded: ["Up"]
+
+# Настройка максимальной длины имени
+type_name:
+  max_length:
+    warning: 60
+    error: 100
+
+# Настройка цикломатической сложности
+cyclomatic_complexity:
+  warning: 20
+  error: 50   
+
+# Будет ошибка при излишних скобках
+control_statement:
+  error
+
+# Будет ошибка при лишнем указании getter-a
+implicit_getter:
+  error
+
+# Будет ошибка, если параметры метода расположены вертикально и не из одной табуляции
+vertical_parameter_alignment:
+  error
+
+# Будет ошибка при отсутствии нужных пробелов при указании возвращаемого значения
+return_arrow_whitespace:
+  error
+
+# Будет ошибка при указании уточненных типов массивов и словарей в устаревших форматах
+syntactic_sugar:
+  error
+# Будет варнинг при принудительном касте типов
+force_cast:
+  error
+
+# Настройка максимального количества параметров метода
+function_parameter_count:
+  warning: 10
+  error: 10
+
+# Настройка максимального размера метода
+function_body_length:
+  warning: 150
+  error: 200
+
+# Настройка максимального количества символов в строке
+line_length:
+  warning: 120
+  error: 150
+  ignores_urls: true
+  ignores_comments: true
+
+switch_case_alignment:
+  indented_cases: true

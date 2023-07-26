@@ -1,0 +1,45 @@
+# Цикломатическая сложность
+cyclomatic_complexity:
+  warning: 25
+  error: 50
+  
+  # Исключаем поды из проверки
+excluded:
+  - Pods
+  
+# Отключаем правила из проверки:
+disabled_rules:
+  - comment_spacing
+  - discouraged_optional_boolean
+  - void_function_in_ternary
+
+# Максимальный размер класса
+type_body_length:
+  warning: 800
+  error: 1000
+
+# Максимальное количество строк в файле
+file_length:
+  warning: 800
+  error: 1000
+
+# Максимальный размер метода
+function_body_length:
+  warning: 150
+  error: 400
+
+# Максимальное количество параметров в кортедже
+large_tuple:
+  warning: 5
+  error: 8
+
+# Отключаем форс каст
+force_cast:
+  warning
+
+# Максимальное количества символов в строке (URL и комментарии не считаются)
+line_length:
+  warning: 120
+  error: 200
+  ignores_urls: true
+  ignores_comments: true

@@ -1,0 +1,2 @@
+child_config: ".flowerz_swiftlint_rules.yml"
+parent_config: "swiftlint_config/rules.yml"
