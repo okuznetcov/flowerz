@@ -14,10 +14,12 @@ public enum Typography {
     case h1Bold
     /// Header 20 Bold -0.5
     case h2Bold
+    /// Paragraph 12 Regular 0.0
+    case p2Regular
     
     func attributedString(_ string: String) -> NSAttributedString {
         let font: UIFont
-        let tracking: CGFloat
+        var tracking: CGFloat = 0
         
         switch self {
             
@@ -28,6 +30,9 @@ public enum Typography {
             case .h2Bold:
                 font = Font.get(size: 20, weight: .bold)
                 tracking = -0.5
+            
+            case .p2Regular:
+                font = Font.get(size: 12, weight: .regular)
         }
         
         typealias Attribute = NSAttributedString.Key
