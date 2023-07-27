@@ -16,6 +16,26 @@ open class BaseButton: UIButton {
     /// Вызывается после завершения анимации нажатия
     public var pressUpAction: (() -> Void)?
     
+    /// Цвет кнопки
+    public var color: UIColor = Color.backgroundSecondary {
+        didSet {
+            // Сбрасываем состояние isHighlighted
+            isHighlighted = false
+            // Апдейтим цвет кнопки
+            backgroundColor = color
+        }
+    }
+    
+    /// Подстветка кнопки
+    open override var isHighlighted: Bool {
+        didSet {
+            // Затемняем кнопку если это необходимо
+            backgroundColor = isHighlighted ? color.darker() : color
+            // Апдейтим состояние isHighlighted
+            super.isHighlighted = isHighlighted
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupButton()
