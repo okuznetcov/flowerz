@@ -28,8 +28,9 @@ public final class PromoBanner: UIView {
                 case sticksToSubtitle
             }
             
-            /// Высота. Указывается явно. Изображение будет растянуто по высоте с сохранением пропорций.
-            let height: CGFloat
+            /// Высота (опционально). Если указана, баннер будет иметь размер с указанной высотой.
+            /// Если не указана, баннер будет иметь высоту совпадающую с высотой переданной картинки.
+            let height: CGFloat?
             /// Цвет текста
             let textColor: UIColor
             /// Расположение кнопки
@@ -67,16 +68,28 @@ public final class PromoBanner: UIView {
             static let horizontalInnerOffset: CGFloat = 24
             /// Расстояние между заголовком и подзаголовком
             static let spacingBetweenTitleAndSubtitle: CGFloat = 20
+            /// Максимальная высота баннера для случаев, когда она не передается явно в параметрах
+            static let maximumAutomaticHeight: CGFloat = 500
         }
         
         /// Настройки анимации фонового изображения
         enum ImageAnimation {
             /// Кривая анимаций, по которой будет анимироваться зум фонового изображения
-            static let curve: UIView.AnimationOptions = .curveEaseInOut
+            static let curve: UIView.AnimationCurve = .easeInOut
             /// Длительность анимации зумирования фонового изображения
             static let duration: TimeInterval = 10
             /// Целевое увеличение изображения
             static let scale = 1.2
+            
+            /// Анимация в обратную сторону (уменьшение)
+            enum Reverse {
+                /// Длительность анимации
+                static let duration: TimeInterval = 0.2
+                /// Кривая анимаций
+                static let curve: UIView.AnimationOptions = .curveEaseInOut
+                /// Задержка перед началом повторной анимации зумирования
+                static let delayBeforeStartingZoomAgain: TimeInterval = 1.0
+            }
         }
         
         /// Конфигурация кнопки по-умолчанию
@@ -85,7 +98,8 @@ public final class PromoBanner: UIView {
             textColor: Color.textWhite,
             color: Color.backgroundSecondary,
             size: .medium,
-            style: .circular
+            style: .circular,
+            performsHapticFeedback: true
         )
     }
     
@@ -147,6 +161,12 @@ public final class PromoBanner: UIView {
     
     /// Кнопка
     private let button = Button(model: Consts.defaultButtonConfiguration)
+    
+    /// Аниматор зумирования картинки
+    private let imageZoomAnimator = UIViewPropertyAnimator(
+        duration: Consts.ImageAnimation.duration,
+        curve: Consts.ImageAnimation.curve
+    )
 
     // MARK: - Init
     
@@ -194,14 +214,24 @@ public final class PromoBanner: UIView {
         
         // Если необходимо, анимируем изображение
         if model.style.animatesImage {
-            typealias Animation = Consts.ImageAnimation
+            startZoomAnimation(afterDelay: 0)
+        }
+        
+        // При нажатии на кнопку вернем размер изображения к исходному
+        button.touchUpAction = { [weak self] in
+            guard let self = self else { return }
+            imageZoomAnimator.stopAnimation(true)
             
             UIView.animate(
-                withDuration: Animation.duration,
+                withDuration: Consts.ImageAnimation.Reverse.duration,
                 delay: 0.0,
-                options: Animation.curve,
+                options: Consts.ImageAnimation.Reverse.curve,
                 animations: {
-                    self.imageView.layer.transform = CATransform3DMakeScale(Animation.scale, Animation.scale, 1)
+                    self.imageView.layer.transform = CATransform3DMakeScale(1, 1, 1)
+                },
+                completion: { [weak self] _ in
+                    // После завершения анимации запустим зум еще раз
+                    self?.startZoomAnimation(afterDelay: Consts.ImageAnimation.Reverse.delayBeforeStartingZoomAgain)
                 }
             )
         }
@@ -227,11 +257,20 @@ public final class PromoBanner: UIView {
             $0.top.equalTo(titleLabel.snp.bottom).offset(Consts.Sizes.spacingBetweenTitleAndSubtitle)
         }
         
+        // Высота баннера
+        let height: CGFloat
+        
+        if let customHeight = model.style.height {
+            height = customHeight
+        } else {
+            height = min(Consts.Sizes.maximumAutomaticHeight, model.image.size.height)
+        }
+        
         // Карточка баннера
         card.snp.makeConstraints {
             $0.leading.trailing.top.equalToSuperview().inset(Consts.Sizes.defaultOffsets)
             $0.bottom.equalToSuperview().inset(Consts.Sizes.defaultOffsets).priority(.high)
-            $0.height.equalTo(model.style.height).priority(.required)
+            $0.height.equalTo(height).priority(.required)
         }
         
         // Изображение
@@ -259,5 +298,16 @@ public final class PromoBanner: UIView {
     /// Настраивает действия
     private func setupActions() {
         button.pressUpAction = { [weak self] in self?.didTapOnButton?() }
+    }
+    
+    /// Запускает анимацию призумливания картинки
+    /// - Parameter delay: задержка, после которой начнется анимация
+    private func startZoomAnimation(afterDelay delay: TimeInterval) {
+        typealias Animation = Consts.ImageAnimation
+        imageZoomAnimator.addAnimations { [weak self] in
+            self?.imageView.layer.transform = CATransform3DMakeScale(Animation.scale, Animation.scale, 1)
+        }
+        
+        imageZoomAnimator.startAnimation(afterDelay: delay)
     }
 }
