@@ -26,6 +26,9 @@ open class BaseButton: UIButton {
         }
     }
     
+    /// Тактильный отклик при нажатии (опционально)
+    public var hapticFeedback: UIImpactFeedbackGenerator.FeedbackStyle?
+    
     /// Подстветка кнопки
     open override var isHighlighted: Bool {
         didSet {
@@ -59,7 +62,15 @@ open class BaseButton: UIButton {
     /// Настраивает кнопку
     private func setupButton() {
         addTouchAnimation()
-        addHandler(for: .touchUpInside) { [weak self] _ in self?.touchUpAction?() }
+        addHandler(for: .touchUpInside) { [weak self] _ in
+            guard let self = self else { return }
+            if let hapticFeedback = self.hapticFeedback {
+                let generator = UIImpactFeedbackGenerator(style: hapticFeedback)
+                generator.impactOccurred()
+            }
+            
+            self.touchUpAction?()
+        }
     }
     
     // MARK: - UIControl

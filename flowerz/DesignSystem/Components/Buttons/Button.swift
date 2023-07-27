@@ -12,6 +12,8 @@ public final class Button: BaseButton {
     
     // MARK: - Nested Types
     
+    typealias Feedback = UIImpactFeedbackGenerator.FeedbackStyle
+    
     /// Модель кнопки
     public struct Model {
         /// Текст в кнопке
@@ -24,6 +26,8 @@ public final class Button: BaseButton {
         let size: Size
         /// Стиль кнопки
         let style: Style
+        /// Будет ли вибрация при нажатии на кнопку (сила зависит от размера кнопки)
+        let performsHapticFeedback: Bool
     }
     
     /// Параметры размера кнопки
@@ -32,6 +36,8 @@ public final class Button: BaseButton {
         let typography: Typography
         /// Высота кнопки
         let height: CGFloat
+        /// Вибрация
+        let hapticFeedback: Feedback
     }
     
     /// Размер кнопки
@@ -48,13 +54,13 @@ public final class Button: BaseButton {
         func parameters() -> SizeParameters {
             switch self {
                 case .small:
-                    return .init(typography: .p2Medium, height: 35)
+                    return .init(typography: .p2Medium, height: 35, hapticFeedback: .light)
                 
                 case .medium:
-                    return .init(typography: .h3Semibold, height: 40)
+                    return .init(typography: .h3Semibold, height: 40, hapticFeedback: .light)
                 
                 case .large:
-                    return .init(typography: .h2Bold, height: 50)
+                    return .init(typography: .h2Bold, height: 50, hapticFeedback: .medium)
             }
         }
     }
@@ -156,6 +162,10 @@ public final class Button: BaseButton {
         // Настраиваем высоту кнопки
         snp.makeConstraints { make in
             make.height.equalTo(model.size.parameters().height).priority(.required)
+        }
+        
+        if model.performsHapticFeedback {
+            hapticFeedback = parameters.hapticFeedback
         }
         
         layoutIfNeeded()
