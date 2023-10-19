@@ -50,7 +50,11 @@ public enum Color {
     
     public static var textSecondary = dynamicColor(light: #colorLiteral(red: 0.4039215686, green: 0.4431372549, blue: 0.4901960784, alpha: 1), dark: #colorLiteral(red: 0.6078431373, green: 0.6431372549, blue: 0.6784313725, alpha: 1))
     
-    public static var backgroundSecondary = dynamicColor(light: #colorLiteral(red: 0.9411764706, green: 0.9450980392, blue: 0.9607843137, alpha: 1), dark: #colorLiteral(red: 0.3803921569, green: 0.4156862745, blue: 0.4588235294, alpha: 0.25))
+    public static var controlDefault = dynamicColor(light: #colorLiteral(red: 0.7333333333, green: 0.7607843137, blue: 0.8117647059, alpha: 0.5), dark: #colorLiteral(red: 0.5058823529, green: 0.5568627451, blue: 0.6117647059, alpha: 0.35))
+    
+   // public static var backgroundSecondary = dynamicColor(light: #colorLiteral(red: 0.9411764706, green: 0.9450980392, blue: 0.9607843137, alpha: 1), dark: #colorLiteral(red: 0.3803921569, green: 0.4156862745, blue: 0.4588235294, alpha: 0.25))
+    
+    public static var backgroundSecondary = dynamicColor(light: #colorLiteral(red: 0.9411764706, green: 0.9450980392, blue: 0.9607843137, alpha: 1), dark: #colorLiteral(red: 0.09619496018, green: 0.1062010303, blue: 0.1146069393, alpha: 1))
 }
 
 extension Color {
